@@ -7,9 +7,9 @@ import { OverviewComponent } from './overview/overview.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'overView', component: OverviewComponent/*, canActivate: [AuthGuard] */},
+  { path: 'overview', component: OverviewComponent/*, canActivate: [AuthGuard] */},
 
-  { path: '**', redirectTo: 'overView' }
+  { path: '**', redirectTo: 'overview' }
 ];
 
 @NgModule({

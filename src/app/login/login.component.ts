@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -51,7 +53,8 @@ export class LoginComponent implements OnInit {
       this.router.navigate([this.returnUrl])
     }).catch((error) => {
       if (error === "Wrong password or username") {
-        console.log("Wrong username or password")
+        this.messageService.clear();
+        this.messageService.add({severity:'error', summary:'Error', detail:'Wrong username or password'});
       }
     })
   }

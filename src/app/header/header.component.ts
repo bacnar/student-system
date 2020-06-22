@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {MenuItem} from 'primeng/api';
+
 
 @Component({
   selector: 'app-header',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
+  items: MenuItem[];
+
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.items = [
+      {label: 'Overview',
+      routerLink: 'overview'},
+      {
+        label: 'User',
+        items: [{
+          label: 'New'
+        }]
+      }
+    ];
   }
 
+  logout() {
+
+  }
 }
