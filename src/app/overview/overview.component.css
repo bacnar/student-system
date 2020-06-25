@@ -1,46 +1,47 @@
 .custom-table {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
-    margin-top: 50px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    0 2px 1px -1px rgba(0, 0, 0, 0.12);
+  margin-top: 50px;
 }
 
 .ui-dropdown {
-    float: left;
+  float: left;
 }
 
 .ui-paginator-current {
-    float: right;
+  float: right;
 }
 
 .ui-table-caption {
-    border: 0 none;
-    padding: 12px;
-    text-align: left;
-    font-size: 20px;
+  border: 0 none;
+  padding: 12px;
+  text-align: left;
+  font-size: 20px;
 }
 
 .ui-paginator {
-    border: 0 none;
-    padding: 1em;
+  border: 0 none;
+  padding: 1em;
 }
 
 .ui-table-thead > tr > th {
-    border: 0 none;
-    text-align: left;
+  border: 0 none;
+  text-align: left;
 }
 
 .ui-table-tbody > tr > td {
-    border: 0 none;
-    cursor: auto;
+  border: 0 none;
+  cursor: auto;
 }
 
 .ui-dropdown-label:not(.ui-placeholder) {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .ui-table-tbody > tr > td .ui-column-title {
-    display: none;
+  display: none;
 }
 
 .button-edit {
-    margin-right: 10px;
+  margin-right: 10px;
 }

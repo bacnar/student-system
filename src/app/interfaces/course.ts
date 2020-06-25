@@ -18,4 +18,4 @@ export interface ImprovedCourse {
 export interface CourseSelect {
     label: string,
     value: Course
-  }
+}

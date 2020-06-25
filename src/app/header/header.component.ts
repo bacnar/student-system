@@ -15,30 +15,30 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent implements OnInit {
 
   items: MenuItem[];
-  ref: DynamicDialogRef;
+  private ref: DynamicDialogRef;
 
   constructor(
-    public dialogService: DialogService,
-    public messageService: MessageService,
-    public dataProviderService: DataProviderService,
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    private dataProviderService: DataProviderService,
     private authService: AuthService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.items = [{
       label: 'Overview',
       routerLink: 'overview',
       items: [{
         label: 'Add new student',
-        command: (onclick) => this.show()
+        command: () => this.show()
       }]
     }];
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
   }
 
-  show() {
+  show(): void {
     this.ref = this.dialogService.open(AddStudentComponent, {
       header: 'Add new student',
       width: 'auto',
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ref.close();
   }
 }

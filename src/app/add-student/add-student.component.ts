@@ -41,7 +41,7 @@ export class AddStudentComponent implements OnInit {
     return this.addForm.controls;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
 
     if (this.addForm.invalid) {

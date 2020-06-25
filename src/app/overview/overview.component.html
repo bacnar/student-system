@@ -2,18 +2,13 @@
 
 <div class="container" style="margin-top: 20px;">
     <div class="custom-table">
-        <p-table 
-        [value]="students" 
-        [rowHover]="true"
-        [rows]="20" 
-        [showCurrentPageReport]="true" 
-        [paginator]="true" 
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+        <p-table [value]="students" [rowHover]="true" [rows]="20" [showCurrentPageReport]="true" [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
 
             <ng-template pTemplate="caption">
                 Students
             </ng-template>
-        
+
             <ng-template pTemplate="header">
                 <tr>
                     <th>#</th>
@@ -31,8 +26,10 @@
                     <td>{{student.age}}</td>
                     <td><span *ngFor="let course of student.courses">{{course.title}}, </span></td>
                     <td style="text-align: right;">
-                        <p-button type="button" label="Edit" class="button-edit" styleClass="ui-button-warning" (onClick)="editStudent(student)"></p-button>
-                        <p-button type="button" label="Delete" styleClass="ui-button-danger" (onClick)="deleteStudent(student)"></p-button>
+                        <p-button type="button" label="Edit" class="button-edit" styleClass="ui-button-warning"
+                            (onClick)="editStudent(student)"></p-button>
+                        <p-button type="button" label="Delete" styleClass="ui-button-danger"
+                            (onClick)="deleteStudent(student)"></p-button>
                     </td>
                 </tr>
             </ng-template>
@@ -40,18 +37,13 @@
     </div>
 
     <div class="custom-table">
-        <p-table 
-        [value]="professors" 
-        [rowHover]="true"
-        [rows]="20" 
-        [showCurrentPageReport]="true" 
-        [paginator]="true" 
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+        <p-table [value]="professors" [rowHover]="true" [rows]="20" [showCurrentPageReport]="true" [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
 
             <ng-template pTemplate="caption">
                 Professors
             </ng-template>
-        
+
             <ng-template pTemplate="header">
                 <tr>
                     <th>#</th>
@@ -73,18 +65,13 @@
     </div>
 
     <div class="custom-table">
-        <p-table 
-        [value]="courses" 
-        [rowHover]="true"
-        [rows]="20" 
-        [showCurrentPageReport]="true" 
-        [paginator]="true" 
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+        <p-table [value]="courses" [rowHover]="true" [rows]="20" [showCurrentPageReport]="true" [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
 
             <ng-template pTemplate="caption">
                 Courses
             </ng-template>
-        
+
             <ng-template pTemplate="header">
                 <tr>
                     <th>#</th>

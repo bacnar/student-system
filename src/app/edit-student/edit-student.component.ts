@@ -41,7 +41,7 @@ export class EditStudentComponent implements OnInit {
     return this.editForm.controls;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
 
     if (this.editForm.invalid) {
@@ -58,7 +58,7 @@ export class EditStudentComponent implements OnInit {
     this.ref.close(student);
   }
 
-  dismiss() {
+  dismiss(): void {
     this.ref.close();
   }
 }

@@ -9,12 +9,12 @@ export class IdGeneratorService {
 
   constructor() { }
 
-  generateUniqueId() {
+  generateUniqueId(): string {
     let fiboNum = this.fibunacciNumbers[Math.floor(Math.random() * this.fibunacciNumbers.length)];
 
     let randomFirst = Math.floor(Math.random() * (900 - fiboNum)) + (fiboNum + 100);
     let second = randomFirst - fiboNum;
 
-    return parseInt(randomFirst.toString() + second.toString() + fiboNum.toString());
+    return randomFirst.toString() + second.toString() + fiboNum.toString();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Student, StudentAdd } from '../interfaces/student';
 import { Professor } from '../interfaces/professor';
-import { Course } from '../interfaces/course';
+import { ImprovedCourse } from '../interfaces/course';
 import { DataProviderService } from '../services/data-provider.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
@@ -16,9 +16,9 @@ export class OverviewComponent implements OnInit {
 
   students: Student[] = [];
   professors: Professor[] = [];
-  courses: Course[] = [];
+  courses: ImprovedCourse[] = [];
 
-  ref: DynamicDialogRef;
+  private ref: DynamicDialogRef;
 
   constructor(
     private dataProvider: DataProviderService,
@@ -33,7 +33,7 @@ export class OverviewComponent implements OnInit {
     this.refreshCourses();
   }
 
-  editStudent(studentBefore: Student) {
+  editStudent(studentBefore: Student): void {
     this.ref = this.dialogService.open(EditStudentComponent, {
       header: 'Add new student',
       width: 'auto',
@@ -53,7 +53,7 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  deleteStudent(student: Student) {
+  deleteStudent(student: Student): void {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete student ${student.name}?`,
       accept: () => {
@@ -66,7 +66,7 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  private refreshStudents() {
+  private refreshStudents(): void {
     this.dataProvider.getStudents()
       .then((response: Student[]) => {
         this.students = response
@@ -74,21 +74,21 @@ export class OverviewComponent implements OnInit {
       .catch(error => console.error("Can't get students", error))
   }
 
-  private refreshCourses() {
+  private refreshCourses(): void {
     this.dataProvider.getCoursesImproved()
-    .then((courses: Course[]) => {
-      this.courses = courses
-    })
-    .catch(error => console.error("Can't get courses", error))
+      .then((courses: ImprovedCourse[]) => {
+        this.courses = courses
+      })
+      .catch(error => console.error("Can't get courses", error))
   }
 
-  private refreshProfessors() {
+  private refreshProfessors(): void {
     this.dataProvider.getProfessors()
-    .then((professors: Professor[]) => this.professors = professors)
-    .catch(error => console.error("Can't get professors", error))
+      .then((professors: Professor[]) => this.professors = professors)
+      .catch(error => console.error("Can't get professors", error))
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.ref.close();
   }
 }

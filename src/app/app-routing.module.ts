@@ -7,7 +7,7 @@ import { OverviewComponent } from './overview/overview.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'overview', component: OverviewComponent/*, canActivate: [AuthGuard] */},
+  { path: 'overview', component: OverviewComponent/*, canActivate: [AuthGuard] */ },
 
   { path: '**', redirectTo: 'overview' }
 ];
