@@ -1,0 +1,31 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+    <div class="p-field p-grid input">
+        <label for="name" class="p-col-fixed" style="width:100px">Name</label>
+        <input formControlName="name" type="text" pInputText [ngClass]="{ 'is-invalid': submitted && form.name.errors }">
+
+        <div *ngIf="submitted && form.name.errors" class="invalid-feedback">
+            <div *ngIf="submitted && form.name.errors.required">Insert name</div>
+        </div>
+    </div>
+
+    <div class="p-field p-grid input">
+        <label for="age" class="p-col-fixed" style="width:100px">Age</label>
+        <input formControlName="age" type="number" pInputText [ngClass]="{ 'is-invalid': submitted && form.age.errors }">
+        
+        <div *ngIf="submitted && form.age.errors" class="invalid-feedback">
+            <div *ngIf="submitted && form.age.errors.required">Insert age</div>
+        </div>
+    </div>
+
+    <div class="p-field p-grid input">
+        <label for="courses" class="p-col-fixed" style="width:100px">Courses</label>
+        <p-multiSelect [style]="{'width':'200px'}" formControlName="courses" [options]="courses" [ngClass]="{ 'is-invalid': submitted && form.courses.errors }"></p-multiSelect>
+
+        <div *ngIf="submitted && form.courses.errors" class="invalid-feedback">
+            <div *ngIf="submitted && form.courses.errors.required">Select atleast one course</div>
+        </div>
+    </div>
+    
+    <p-button label="Add student" type="submit" class="submit-button"></p-button>
+</form>

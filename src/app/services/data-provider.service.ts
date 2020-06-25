@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Student } from '../interfaces/student';
+import { Student, StudentAdd } from '../interfaces/student';
 import { Professor } from '../interfaces/professor';
-import { of } from 'rxjs';
+import { Course, ImprovedCourse } from '../interfaces/course';
 
 
 @Injectable({
@@ -12,42 +12,149 @@ export class DataProviderService {
 
   private apiUrl: string = "https://studentsystem-7ecc6.firebaseio.com"
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getStudents() {
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.apiUrl}/students.json`).toPromise().then((response: Object) => {
-        let students: Student[] = [];
+      this.http.get(`${this.apiUrl}/students.json`).toPromise().then((response: Object) => {        
+        this.getCourses()
+        .then((courses: Object) => {
 
-        for (let [key, value] of Object.entries(response)) {
-          students.push(value as Student)
-        }
+          let coursesFiltered = Object.entries(courses).map((keyValueCourses) => keyValueCourses[1]) as Course[];
 
-        resolve(students);
-      })
-    }) 
+          let students = Object.entries(response).map((keyValueStudent) => keyValueStudent[1]);
+
+          students.forEach((student) => {
+            student.courses = student.courses.map((course) => coursesFiltered.find((courseFiltered: Course) => courseFiltered.id == course))
+          })
+  
+          resolve(students as Student[]);
+        })
+      }).catch((error) => reject(error))
+    })
   }
 
   deleteStudent(studentId: number) {
-    return this.http.delete(`${this.apiUrl}/students/${studentId}.json`, ).toPromise()
+    return this.http.delete(`${this.apiUrl}/students/${studentId}.json`,).toPromise()
   }
 
-  addStudent(student: Student) {
-    let requestBody = {};
-    requestBody[student.id] = student;
+  addStudent(student: StudentAdd) {
+    return new Promise((resolve, reject) => {
 
-    return this.http.post<Student>(`${this.apiUrl}/students.json`, requestBody).toPromise()
+      this.http.put<StudentAdd>(`${this.apiUrl}/students/${student.id}.json`, student).toPromise()
+        .then(async () => {
+          student.courses.forEach(async (courseId) => {
+
+            try {
+              await this.addStudentsToCourses(courseId, student.id);
+            }
+            catch (error) {
+              reject(error);
+              return;
+            }
+          })
+
+          resolve();
+        })
+        .catch((error) => reject(error))
+    })
   }
 
-  editStudent(student: Student) {
-    return this.http.patch<Student>(`${this.apiUrl}/students/${student.id}.json`, student).toPromise()
+  editStudent(student: StudentAdd, studentBefore: Student) {
+    return new Promise((resolve, reject) => {
+      let coursesBefore = studentBefore.courses.map((course: Course) => course.id)
+      let coursesNow = student.courses
+
+
+      this.http.patch<StudentAdd>(`${this.apiUrl}/students/${student.id}.json`, student).toPromise().then(async () => {
+        coursesBefore.forEach(async (courseId) => {
+          try {
+            await this.deleteStudentsToCourses(courseId, student.id);
+          }
+          catch (error) {
+            reject(error);
+            return;
+          }
+
+        })
+
+        coursesNow.forEach(async (courseId) => {
+          try {
+            await this.addStudentsToCourses(courseId, student.id);
+          }
+          catch (error) {
+            reject(error);
+            return;
+          }
+        })
+
+        resolve();
+      })
+    })
   }
 
   getProfessors() {
-    return this.http.get<Professor[]>(`${this.apiUrl}/professors.json`).toPromise()
+    return new Promise((resolve, reject) => {
+      this.http.get<Professor[]>(`${this.apiUrl}/professors.json`).toPromise().then((response: Object) => {        
+        this.getCourses()
+        .then((courses: Object) => {
+
+          let coursesFiltered = Object.entries(courses).map((keyValueCourses) => keyValueCourses[1]) as Course[];
+
+          let professors = Object.entries(response).map((keyValueStudent) => keyValueStudent[1]);
+
+          professors.forEach((professor) => {
+            professor.courses = professor.courses.map((course) => coursesFiltered.find((courseFiltered: Course) => courseFiltered.id == course))
+          })
+  
+          resolve(professors as Professor[]);
+        })
+      }).catch((error) => reject(error))
+    })
   }
 
   getCourses() {
-    return this.http.get<Professor[]>(`${this.apiUrl}/courses.json`).toPromise()
+    return this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise()
+  }
+
+  getCoursesImproved() {
+    return new Promise((resolve, reject) => {
+      this.getCourses().then(async (response: Object[]) => {
+
+        await response.forEach(async (course: Object) => {
+          var professor: Professor = await this.getProfessor(course['professor_id'])
+          delete course['professor_id'] 
+          course["professor"] = professor
+          if(course['students'] != undefined) {
+            
+            var students = Object.entries(course['students']).map(async (keyValueStudent) => {
+              return this.getStudent(keyValueStudent[1] as string);
+            })
+
+            course['students'] = await Promise.all(students);
+          }
+        })
+
+        resolve(response as ImprovedCourse[]);
+      }).catch((error) => reject(error))
+    })
+  }
+
+  private addStudentsToCourses(courseId: string, studentId: string) {
+    let obj = {}
+    obj[studentId] = studentId
+    return this.http.patch<Course>(`${this.apiUrl}/courses/${courseId}/students.json`, obj).toPromise()
+  }
+
+  private deleteStudentsToCourses(courseId: string, studentId: string) {
+    return this.http.delete<Course>(`${this.apiUrl}/courses/${courseId}/students/${studentId}.json`).toPromise()
+  }
+
+  private getProfessor(professorId: string) {
+    return this.http.get<Professor>(`${this.apiUrl}/professors/${professorId}.json`).toPromise()
+  }
+
+  private getStudent(studentId: string) {
+    return this.http.get(`${this.apiUrl}/students/${studentId}.json`).toPromise()
   }
 }

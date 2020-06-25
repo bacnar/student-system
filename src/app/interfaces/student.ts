@@ -1,8 +1,15 @@
 import { Course } from './course';
 
 export interface Student {
-    id: number,
+    id: string,
     age: number,
     name: string,
-    courses: Array<Course>
+    courses: Course[]
+}
+
+export interface StudentAdd {
+    id: string,
+    age: number,
+    name: string,
+    courses: string[]
 }

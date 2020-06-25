@@ -20,6 +20,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AddStudentComponent } from './add-student/add-student.component';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { EditStudentComponent } from './edit-student/edit-student.component';
 
 
 @NgModule({
@@ -28,7 +33,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     HeaderComponent,
     FooterComponent,
     LoginComponent,
-    OverviewComponent
+    OverviewComponent,
+    AddStudentComponent,
+    EditStudentComponent
   ],
   imports: [
     BrowserModule,
@@ -44,9 +51,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ToastModule,
     BrowserAnimationsModule,
     SplitButtonModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DynamicDialogModule,
+    InputTextModule,
+    MultiSelectModule
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, DialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
