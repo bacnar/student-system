@@ -53,13 +53,14 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  deleteStudent(studentId: number, studentName: string) {
+  deleteStudent(student: Student) {
     this.confirmationService.confirm({
-      message: `Are you sure that you want to delete student ${studentName}?`,
+      message: `Are you sure that you want to delete student ${student.name}?`,
       accept: () => {
-        this.dataProvider.deleteStudent(studentId).then(() => {
+        this.dataProvider.deleteStudent(student).then(() => {
           this.messageService.add({ severity: 'warn', summary: 'Deleted', detail: 'User deleted' });
           this.refreshStudents();
+          this.refreshCourses()
         }).catch((error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Cannot delete student' }))
       }
     });

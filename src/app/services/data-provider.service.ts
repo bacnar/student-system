@@ -34,8 +34,18 @@ export class DataProviderService {
     })
   }
 
-  deleteStudent(studentId: number) {
-    return this.http.delete(`${this.apiUrl}/students/${studentId}.json`,).toPromise()
+  deleteStudent(student: Student) {
+    return new Promise((resolve, reject) => {
+      this.http.delete(`${this.apiUrl}/students/${student.id}.json`,).toPromise().then(async () => {
+
+        for(let course of student.courses) {
+          await this.deleteStudentsToCourses(course.id, student.id);
+        }
+
+        resolve();
+      })
+      .catch((error) => reject(error))
+    })
   }
 
   addStudent(student: StudentAdd) {

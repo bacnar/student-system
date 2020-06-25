@@ -32,7 +32,7 @@
                     <td><span *ngFor="let course of student.courses">{{course.title}}, </span></td>
                     <td style="text-align: right;">
                         <p-button type="button" label="Edit" class="button-edit" styleClass="ui-button-warning" (onClick)="editStudent(student)"></p-button>
-                        <p-button type="button" label="Delete" styleClass="ui-button-danger" (onClick)="deleteStudent(student.id, student.name)"></p-button>
+                        <p-button type="button" label="Delete" styleClass="ui-button-danger" (onClick)="deleteStudent(student)"></p-button>
                     </td>
                 </tr>
             </ng-template>
