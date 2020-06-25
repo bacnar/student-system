@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AddStudentComponent } from '../add-student/add-student.component';
-import { Student, StudentAdd } from '../interfaces/student';
+import { StudentAdd } from '../interfaces/student';
 import { DataProviderService } from '../services/data-provider.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class HeaderComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     private dataProviderService: DataProviderService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.items = [{
@@ -36,6 +38,7 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/login'])
   }
 
   show(): void {

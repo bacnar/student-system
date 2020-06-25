@@ -6,6 +6,7 @@ import { DataProviderService } from '../services/data-provider.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
 import { EditStudentComponent } from '../edit-student/edit-student.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
@@ -19,6 +20,7 @@ export class OverviewComponent implements OnInit {
   courses: ImprovedCourse[] = [];
 
   private ref: DynamicDialogRef;
+  private newUserSubscribe: Subscription
 
   constructor(
     private dataProvider: DataProviderService,
@@ -28,6 +30,11 @@ export class OverviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.newUserSubscribe = this.dataProvider.onNewUser.subscribe(() => {
+      this.refreshStudents();
+      this.refreshCourses();
+    })
+
     this.refreshStudents();
     this.refreshProfessors();
     this.refreshCourses();
@@ -47,6 +54,7 @@ export class OverviewComponent implements OnInit {
           .then(() => {
             this.messageService.add({ severity: 'info', summary: 'Student updated', detail: `Student ${student.name} updated.` })
             this.refreshStudents();
+            this.refreshCourses();
           })
           .catch((error) => this.messageService.add({ severity: 'error', summary: 'Cannot update student', detail: error }));
       }
@@ -89,6 +97,9 @@ export class OverviewComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.ref.close();
+    this.newUserSubscribe.unsubscribe();
+    if(this.ref) {
+      this.ref.close();      
+    }
   }
 }

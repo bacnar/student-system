@@ -16,8 +16,6 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   submitted: boolean = false;
 
-  private returnUrl: string;
-
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -46,7 +44,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
 
     this.authService.authenticate(this.form.username.value, this.form.password.value).then(() => {
-      this.router.navigate([this.returnUrl])
+      this.router.navigate([''])
 
     }).catch((error) => {
       if (error === "Wrong password or username") {

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Student, StudentAdd } from '../interfaces/student';
 import { Professor } from '../interfaces/professor';
 import { Course, ImprovedCourse, CourseSelect } from '../interfaces/course';
+import { Observable, Subscriber } from 'rxjs';
 
 
 @Injectable({
@@ -10,9 +11,16 @@ import { Course, ImprovedCourse, CourseSelect } from '../interfaces/course';
 })
 export class DataProviderService {
 
+  public onNewUser: Observable<void>;
+
+  private newUser: Subscriber<void>;
   private apiUrl: string = "https://studentsystem-7ecc6.firebaseio.com"
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.onNewUser = new Observable((observer) => {
+      this.newUser = observer;
+    })
+  }
 
   getStudents(): Promise<Student[]> {
     return new Promise((resolve, reject) => {
@@ -63,6 +71,7 @@ export class DataProviderService {
             }
           }
 
+          this.newUser.next();
           resolve();
         }).catch((error) => reject(error))
     })
