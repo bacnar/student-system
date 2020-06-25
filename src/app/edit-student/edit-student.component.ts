@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataProviderService } from '../services/data-provider.service';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { IdGeneratorService } from '../services/id-generator.service';
 import { Course, CourseSelect } from '../interfaces/course';
 import { StudentAdd, Student } from '../interfaces/student';
 
@@ -16,7 +15,7 @@ export class EditStudentComponent implements OnInit {
   courses: CourseSelect[] = [];
   editForm: FormGroup;
   submitted: boolean = false;
-  studentId: string;
+  private student: Student;
 
   constructor(
     private dataProviderService: DataProviderService,
@@ -26,27 +25,15 @@ export class EditStudentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let student: Student = this.config.data as Student;
-    let selectedCourses: Course[] = student.courses.map((course: Course) => course)
-    this.studentId = student.id;
+    this.student = this.config.data as Student;
+    let selectedCourses: Course[] = this.student.courses.map((course: Course) => course)
 
     this.editForm = this.formBuilder.group({
-      name: [student.name, Validators.required],
-      age: [student.age, Validators.required],
       courses: [selectedCourses, Validators.required]
     });
 
     this.dataProviderService.getCourses()
-      .then((coursesResponse: Course[]) => {
-        coursesResponse.forEach(course => {
-          var cor: CourseSelect = {
-            label: course.title,
-            value: course
-          }
-
-          this.courses.push(cor)
-        })
-      })
+      .then((coursesResponse: CourseSelect[]) => this.courses = coursesResponse)
       .catch((error) => console.error("Can't get courses", error))
   }
 
@@ -62,9 +49,9 @@ export class EditStudentComponent implements OnInit {
     }
 
     var student: StudentAdd = {
-      id: this.studentId,
-      age: this.editForm.controls.age.value,
-      name: this.editForm.controls.name.value,
+      id: this.student.id,
+      age: this.student.age,
+      name: this.student.name,
       courses: Array.from(this.editForm.controls.courses.value as Course[], course => course.id) as string[]
     }
 

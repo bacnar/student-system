@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { OverviewComponent } from './overview/overview.component';
 
@@ -31,7 +30,6 @@ import { EditStudentComponent } from './edit-student/edit-student.component';
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent,
     LoginComponent,
     OverviewComponent,
     AddStudentComponent,

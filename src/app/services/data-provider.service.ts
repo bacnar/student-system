@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Student, StudentAdd } from '../interfaces/student';
 import { Professor } from '../interfaces/professor';
-import { Course, ImprovedCourse } from '../interfaces/course';
+import { Course, ImprovedCourse, CourseSelect } from '../interfaces/course';
 
 
 @Injectable({
@@ -17,12 +17,12 @@ export class DataProviderService {
   getStudents() {
     return new Promise((resolve, reject) => {
       this.http.get(`${this.apiUrl}/students.json`).toPromise().then((response: Object) => {        
-        this.getCourses()
+        this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise()
         .then((courses: Object) => {
 
           let coursesFiltered = Object.entries(courses).map((keyValueCourses) => keyValueCourses[1]) as Course[];
 
-          let students = Object.entries(response).map((keyValueStudent) => keyValueStudent[1]);
+          let students = response != null ? Object.entries(response).map((keyValueStudent) => keyValueStudent[1]) : []
 
           students.forEach((student) => {
             student.courses = student.courses.map((course) => coursesFiltered.find((courseFiltered: Course) => courseFiltered.id == course))
@@ -96,7 +96,7 @@ export class DataProviderService {
   getProfessors() {
     return new Promise((resolve, reject) => {
       this.http.get<Professor[]>(`${this.apiUrl}/professors.json`).toPromise().then((response: Object) => {        
-        this.getCourses()
+        this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise()
         .then((courses: Object) => {
 
           let coursesFiltered = Object.entries(courses).map((keyValueCourses) => keyValueCourses[1]) as Course[];
@@ -113,27 +113,47 @@ export class DataProviderService {
     })
   }
 
-  getCourses() {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise()
+  getCourses(): Promise<CourseSelect[]> {
+    return new Promise((resolve, reject) => {
+      this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise().then((response) => {
+        let courses: CourseSelect[] = [];
+
+        response.forEach(course => {
+          var courseSelect: CourseSelect = {
+            label: course.title,
+            value: course
+          }
+
+          courses.push(courseSelect)
+        })
+
+        resolve(courses)
+      })
+      .catch((error) => reject(error))
+    })
   }
 
   getCoursesImproved() {
-    return new Promise((resolve, reject) => {
-      this.getCourses().then(async (response: Object[]) => {
+    return new Promise(async (resolve, reject) => {
+      this.http.get<Course[]>(`${this.apiUrl}/courses.json`).toPromise().then(async (response: Object[]) => {
 
-        await response.forEach(async (course: Object) => {
+        for (let course of response) {
           var professor: Professor = await this.getProfessor(course['professor_id'])
+
           delete course['professor_id'] 
           course["professor"] = professor
+
           if(course['students'] != undefined) {
             
             var students = Object.entries(course['students']).map(async (keyValueStudent) => {
-              return this.getStudent(keyValueStudent[1] as string);
+              return await this.getStudent(keyValueStudent[1] as string);
             })
 
             course['students'] = await Promise.all(students);
-          }
-        })
+          } else {
+            course['students'] = [];
+          }          
+        }
 
         resolve(response as ImprovedCourse[]);
       }).catch((error) => reject(error))

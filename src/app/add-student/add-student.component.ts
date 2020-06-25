@@ -33,16 +33,7 @@ export class AddStudentComponent implements OnInit {
     });
 
     this.dataProviderService.getCourses()
-      .then((coursesResponse: Course[]) => {
-        coursesResponse.forEach(course => {
-          var cor: CourseSelect = {
-            label: course.title,
-            value: course
-          }
-
-          this.courses.push(cor)
-        })
-      })
+      .then((coursesResponse: CourseSelect[]) => this.courses = coursesResponse)
       .catch((error) => console.error("Can't get courses", error))
   }
 

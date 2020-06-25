@@ -67,16 +67,16 @@ export class OverviewComponent implements OnInit {
 
   private refreshStudents() {
     this.dataProvider.getStudents()
-      .then((response: Student[]) => this.students = response)
+      .then((response: Student[]) => {
+        this.students = response
+      })
       .catch(error => console.error("Can't get students", error))
   }
 
   private refreshCourses() {
     this.dataProvider.getCoursesImproved()
     .then((courses: Course[]) => {
-      console.log(courses)
       this.courses = courses
-
     })
     .catch(error => console.error("Can't get courses", error))
   }
